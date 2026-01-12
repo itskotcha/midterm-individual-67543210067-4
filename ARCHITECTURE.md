@@ -79,6 +79,12 @@
 ---
  ## 🔄 PART 4: Data Flow (Request -> Response)
 ตัวอย่างขั้นตอนการทำงานเมื่อมีการ "ยืมหนังสือ" (Borrow):
+```
+Client → Controller → Service → Validator → Repository → Database
+         ↓ parse ID  ↓ check   ↓ validate  ↓ SQL       ↓ update
+                     status    ID format   UPDATE      status
+         ← response ← ← ← ← ← ← ← ← ← ← ← ← ← ← ← ← ←
+```
 
 **1.Client** ส่ง Request (PATCH) มายัง Routes
 
