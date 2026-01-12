@@ -1,47 +1,33 @@
-// src/presentation/controllers/bookController.js
 const bookService = require('../../business/services/bookService');
 
 class BookController {
-    // TODO: Implement getAllBooks
     async getAllBooks(req, res, next) {
-        try {
-            const { status } = req.query;
-            // เรียก bookService.getAllBooks()
-            // ส่ง response กลับ
-        } catch (error) {
-            next(error);
-        }
+        try { res.json(await bookService.getAllBooks(req.query.status)); } 
+        catch (e) { next(e); }
     }
-
-    // TODO: Implement getBookById
     async getBookById(req, res, next) {
-        // ให้นักศึกษาเขียนเอง
+        try { res.json(await bookService.getBookById(req.params.id)); } 
+        catch (e) { next(e); }
     }
-
-    // TODO: Implement createBook
     async createBook(req, res, next) {
-        // ให้นักศึกษาเขียนเอง
+        try { res.status(201).json(await bookService.createBook(req.body)); } 
+        catch (e) { next(e); }
     }
-
-    // TODO: Implement updateBook
     async updateBook(req, res, next) {
-        // ให้นักศึกษาเขียนเอง
+        try { res.json(await bookService.updateBook(req.params.id, req.body)); } 
+        catch (e) { next(e); }
     }
-
-    // TODO: Implement borrowBook
     async borrowBook(req, res, next) {
-        // ให้นักศึกษาเขียนเอง
+        try { res.json(await bookService.borrowBook(req.params.id)); } 
+        catch (e) { next(e); }
     }
-
-    // TODO: Implement returnBook
     async returnBook(req, res, next) {
-        // ให้นักศึกษาเขียนเอง
+        try { res.json(await bookService.returnBook(req.params.id)); } 
+        catch (e) { next(e); }
     }
-
-    // TODO: Implement deleteBook
     async deleteBook(req, res, next) {
-        // ให้นักศึกษาเขียนเอง
+        try { res.json(await bookService.deleteBook(req.params.id)); } 
+        catch (e) { next(e); }
     }
 }
-
 module.exports = new BookController();

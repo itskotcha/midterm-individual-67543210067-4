@@ -1,8 +1,8 @@
 # Library Management System - Layered Architecture
 
 ## 📋 Project Information
-- **Student Name:** [ชื่อ-นามสกุล]
-- **Student ID:** [รหัสนักศึกษา]
+- **Student Name:** นางสาวกชพร วงศ์ใหญ่
+- **Student ID:** 67543210067-4
 - **Course:** ENGSE207 Software Architecture
 
 ## 🏗️ Architecture Style

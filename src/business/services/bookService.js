@@ -1,58 +1,52 @@
-// src/business/services/bookService.js
 const bookRepository = require('../../data/repositories/bookRepository');
-const bookValidator = require('../validators/bookValidator');
+const validator = require('../validators/bookValidator');
 
 class BookService {
-    // TODO: Implement getAllBooks
-    async getAllBooks(status = null) {
-        // 1. ถ้ามี status ให้ validate
-        // 2. เรียก bookRepository.findAll(status)
-        // 3. คำนวณสถิติ (available, borrowed, total)
-        // 4. return { books, statistics }
+    async getAllBooks(status) {
+        const books = await bookRepository.findAll(status);
+        const stats = {
+            available: books.filter(b => b.status === 'available').length,
+            borrowed: books.filter(b => b.status === 'borrowed').length,
+            total: books.length
+        };
+        return { books, statistics: stats };
     }
 
-    // TODO: Implement getBookById
     async getBookById(id) {
-        // 1. Validate ID
-        // 2. เรียก repository
-        // 3. ถ้าไม่เจอ throw NotFoundError
-        // 4. return book
+        const bookId = validator.validateId(id);
+        const book = await bookRepository.findById(bookId);
+        if (!book) throw new Error('Book not found');
+        return book;
     }
 
-    // TODO: Implement createBook
-    async createBook(bookData) {
-        // 1. Validate book data
-        // 2. Validate ISBN format
-        // 3. เรียก repository.create()
-        // 4. return created book
+    async createBook(data) {
+        validator.validateBookData(data);
+        return await bookRepository.create(data);
     }
 
-    // TODO: Implement updateBook
-    async updateBook(id, bookData) {
-        // ให้นักศึกษาเขียนเอง
+    async updateBook(id, data) {
+        const bookId = validator.validateId(id);
+        await this.getBookById(bookId);
+        validator.validateBookData(data);
+        return await bookRepository.update(bookId, data);
     }
 
-    // TODO: Implement borrowBook
     async borrowBook(id) {
-        // 1. ดึงหนังสือจาก repository
-        // 2. ตรวจสอบว่า status = 'available' หรือไม่
-        // 3. ถ้า borrowed อยู่แล้ว throw error
-        // 4. เรียก repository.updateStatus(id, 'borrowed')
-        // 5. return updated book
+        const book = await this.getBookById(id);
+        if (book.status === 'borrowed') throw new Error('Book is already borrowed');
+        return await bookRepository.updateStatus(id, 'borrowed');
     }
 
-    // TODO: Implement returnBook
     async returnBook(id) {
-        // ให้นักศึกษาเขียนเอง (คล้ายกับ borrowBook)
+        const book = await this.getBookById(id);
+        if (book.status !== 'borrowed') throw new Error('Book is not borrowed');
+        return await bookRepository.updateStatus(id, 'available');
     }
 
-    // TODO: Implement deleteBook
     async deleteBook(id) {
-        // 1. ดึงหนังสือจาก repository
-        // 2. ตรวจสอบว่า status ไม่ใช่ 'borrowed'
-        // 3. ถ้า borrowed ห้ามลบ throw error
-        // 4. เรียก repository.delete(id)
+        const book = await this.getBookById(id);
+        if (book.status === 'borrowed') throw new Error('Cannot delete borrowed book');
+        return await bookRepository.delete(id);
     }
 }
-
 module.exports = new BookService();

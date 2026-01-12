@@ -1,16 +1,9 @@
-// src/presentation/middlewares/errorHandler.js
 function errorHandler(err, req, res, next) {
-    console.error('Error:', err.message);
-    
-    // TODO: Handle different error types
-    // - ValidationError → 400
-    // - NotFoundError → 404
-    // - ConflictError → 409
-    // - Default → 500
-    
-    res.status(500).json({
-        error: err.message || 'Internal server error'
-    });
-}
+    let statusCode = 500;
+    if (err.message.includes('not found')) statusCode = 404;
+    if (err.message.includes('required') || err.message.includes('Invalid')) statusCode = 400;
+    if (err.message.includes('UNIQUE')) statusCode = 409;
 
+    res.status(statusCode).json({ error: err.message || 'Internal Server Error' });
+}
 module.exports = errorHandler;
